@@ -14,8 +14,9 @@
 @interface FakeQuestionBuilder : QuestionBuilder
 
 @property (nonatomic, copy) NSString *JSON;
-@property (nonatomic, copy) NSArray *arrayToReturn;
-@property (nonatomic, copy) NSError *errorToSet;
+@property (nonatomic, strong) NSArray *arrayToReturn;
+@property (nonatomic, strong) NSError *errorToSet;
+@property (nonatomic, strong) Question *questionToFill;
 
 
 @end

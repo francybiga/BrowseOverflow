@@ -10,4 +10,9 @@
 
 @implementation StackOverflowCommunicator
 
+- (BOOL)wasAskedToFetchBody
+{
+   return false;
+}
+
 @end

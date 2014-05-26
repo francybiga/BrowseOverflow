@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "Question.h"
 #import "Answer.h"
+#import "Person.h"
 
 @interface QuestionTests : XCTestCase
 @end
@@ -17,6 +18,7 @@
     Question *question;
     Answer *lowScore;
     Answer *highScore;
+    Person *asker;
 }
 
 
@@ -41,6 +43,9 @@
     highScore = [[Answer alloc]init];
     highScore.score = 4;
     [question addAnswer:highScore];
+
+    asker = [[Person  alloc] initWithName:@"Graham Lee" avatarLocation:@"http://example.com/avatar.png"];
+    question.asker = asker;
 }
 
 
@@ -89,5 +94,9 @@
     XCTAssertTrue(highIndex < lowIndex,@"High.scoring answer comes first");
 }
 
+- (void)questionWasAskedBySomeone
+{
+    XCTAssertEqualObjects(question.asker, asker,@"Question should keep track of who asked it");
+}
 
 @end

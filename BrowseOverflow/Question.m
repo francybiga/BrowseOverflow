@@ -7,12 +7,12 @@
 //
 
 #import "Question.h"
+#import "Person.h"
 
 @implementation Question
 
 - (id)init
 {
-
     if (self =[super init]){
         answerSet = [[NSMutableSet alloc]init];
     }

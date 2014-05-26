@@ -65,4 +65,18 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
     [self.delegate fetchingQuestionsFailedWithError:reportableError];
 }
 
+- (void)fetchBodyForQuestion:(Question*)question
+{
+
+}
+- (void)fetchingQuestionBodyFailedWithError:(NSError *)error
+{
+
+}
+
+- (void)receivedQuestionBodyJSON:(NSString*)json
+{
+
+}
+
 @end

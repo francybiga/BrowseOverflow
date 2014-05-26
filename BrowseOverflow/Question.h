@@ -8,14 +8,19 @@
 
 
 @class Answer;
+@class Person;
+
 @interface Question : NSObject{
     NSMutableSet *answerSet;
 }
 
+@property (assign, nonatomic) NSInteger questionID;
 @property (strong, nonatomic) NSDate *date;
-@property (strong, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *title;
 @property (assign, nonatomic) NSInteger score;
 @property (strong, nonatomic, readonly) NSArray *answers;
+@property (strong, nonatomic) Person *asker;
+@property (copy, nonatomic) NSString *body;
 
 - (void)addAnswer:(Answer *)answer;
 

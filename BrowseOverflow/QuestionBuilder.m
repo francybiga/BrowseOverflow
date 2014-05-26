@@ -7,6 +7,7 @@
 //
 
 #import "QuestionBuilder.h"
+#import "Question.h"
 
 NSString *QuestionBuilderErrorDomain= @"StackOverflowQuestionBuilderError";
 
@@ -45,7 +46,9 @@ NSString *QuestionBuilderErrorDomain= @"StackOverflowQuestionBuilderError";
     return nil;
 }
 
+- (void)fillInDetailsForQuestion:(Question*)question fromJSON:(NSString*)jsonString
+{
 
-
+}
 
 @end
