@@ -8,11 +8,12 @@
 
 #import "StackOverflowCommunicator.h"
 
-@implementation StackOverflowCommunicator
+@interface StackOverflowCommunicator ()
 
-- (BOOL)wasAskedToFetchBody
-{
-   return false;
-}
+@property (nonatomic, assign) BOOL fetchBodyAsked;
+
+@end
+
+@implementation StackOverflowCommunicator
 
 @end

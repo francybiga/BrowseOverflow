@@ -10,7 +10,8 @@
 
 @interface MockStackOverflowCommunicator ()
 
-@property (nonatomic,assign) BOOL wasAskedToFetchQuestions;
+@property (nonatomic, assign) BOOL wasAskedToFetchQuestions;
+@property (nonatomic, assign) BOOL wasAskedToFetchBody;
 
 @end
 
@@ -24,5 +25,16 @@
 {
     return _wasAskedToFetchQuestions;
 }
+
+- (BOOL)wasAskedToFetchBody
+{
+    return _wasAskedToFetchBody;
+}
+
+- (void)searchBodyForQuestion:(Question*)question
+{
+    self.wasAskedToFetchBody = YES;
+}
+
 
 @end

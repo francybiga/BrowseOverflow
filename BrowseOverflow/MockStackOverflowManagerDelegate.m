@@ -30,4 +30,9 @@
     self.receivedQuestions = questions;
 }
 
+- (void)fetchingBodyFailedWithError:(NSError*)error
+{
+    self.fetchError = error;
+}
+
 @end

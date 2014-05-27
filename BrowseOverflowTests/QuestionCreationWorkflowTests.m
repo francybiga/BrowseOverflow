@@ -81,11 +81,11 @@
 
 - (void)testsAskingForQuestionsMeansRequestingData
 {
-    MockStackOverflowCommunicator *communicator = [[MockStackOverflowCommunicator alloc]init];
-    mgr.communicator = communicator;
+    MockStackOverflowCommunicator *mockCommunicator = (MockStackOverflowCommunicator*)communicator;
+    mgr.communicator = mockCommunicator;
     Topic *topic = [[Topic alloc]initWithName:@"iPhone" tag:@"iphone"];
     [mgr fetchQuestionsOnTopic:topic];
-    XCTAssertTrue([communicator wasAskedToFetchQuestions], @"The communicator should need to fetch data");
+    XCTAssertTrue([mockCommunicator wasAskedToFetchQuestions], @"The communicator should need to fetch data");
 }
 
 - (void)testErrorReturnedToDelegateIsNotErrorNotifiedByCommunicator
@@ -123,7 +123,7 @@
     XCTAssertNil([delegate fetchError], @"No error should be received on success");
 }
 
-- (void)testDelegateReceivesTHeQuestionsDiscoveredByManager
+- (void)testDelegateReceivesTheQuestionsDiscoveredByManager
 {
     questionBuilder.arrayToReturn = questionArray;
     [mgr receivedQuestionsJSON:@"Fake JSON"];
@@ -140,7 +140,8 @@
 - (void)testAskingForQuestionBodyMeansRequestingData
 {
     [mgr fetchBodyForQuestion:questionToFetch];
-    XCTAssertTrue([communicator wasAskedToFetchBody],@"The communicator should need to retrieve data for the question body");
+    MockStackOverflowCommunicator *mockCommunicator = (MockStackOverflowCommunicator*)communicator;
+    XCTAssertTrue([mockCommunicator wasAskedToFetchBody],@"The communicator should need to retrieve data for the question body");
 }
 
 - (void)testDelegateNotifiedOfFailureToFetchQuestionBody
@@ -152,7 +153,7 @@
 - (void)testManagerPassesRetrievedQuestionBodyToQuestionBuilder
 {
     [mgr receivedQuestionBodyJSON:@"Fake JSON"];
-    XCTAssertEqualObjects(questionBuilder.JSON, @"Fae JSON",@"Succesfully retrieved data should be passed to the builder");
+    XCTAssertEqualObjects(questionBuilder.JSON, @"Fake JSON",@"Succesfully retrieved data should be passed to the builder");
 }
 
 - (void)testManagerPassesQuestionItWasSentToQuestionBuilderForFillingIn

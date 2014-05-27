@@ -13,6 +13,13 @@
 
 NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
 
+
+@interface StackOverflowManager ()
+
+@property (nonatomic, strong) Question *questionNeedingBody;
+
+@end
+
 @implementation StackOverflowManager
 
 - (void)setDelegate:(id<StackOverflowManagerDelegate>)newDelegate
@@ -31,7 +38,7 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
 
 - (void)searchingForQuestionsFailedWithError:(NSError*)error
 {
-    [self tellDelegateAbountQuestionSearchError:error];
+    [self tellDelegateAboutQuestionSearchError:error];
 }
 
 - (void)receivedQuestionsJSON:(NSString*)objectNotation
@@ -40,14 +47,14 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
     NSArray *questions = [self.questionBuilder questionsFromJSON:objectNotation error:&error];
     
     if (!questions){
-        [self tellDelegateAbountQuestionSearchError:error];
+        [self tellDelegateAboutQuestionSearchError:error];
     }
     else {
         [self.delegate didReceivedQuestions:questions];
     }
 }
 
-- (void)tellDelegateAbountQuestionSearchError:(NSError*)error
+- (void)tellDelegateAboutQuestionSearchError:(NSError*)error
 {
     NSError *reportableError;
     
@@ -65,18 +72,39 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
     [self.delegate fetchingQuestionsFailedWithError:reportableError];
 }
 
+
 - (void)fetchBodyForQuestion:(Question*)question
 {
-
+    self.questionNeedingBody = question;
+    [self.communicator  searchBodyForQuestion:question];
 }
 - (void)fetchingQuestionBodyFailedWithError:(NSError *)error
 {
-
+    [self tellDelegateAboutBodySearchError:error];
 }
 
-- (void)receivedQuestionBodyJSON:(NSString*)json
+- (void)tellDelegateAboutBodySearchError:(NSError*)error
 {
+    NSError *reportableError;
+    
+    if (error){
+        reportableError = [NSError errorWithDomain:StackOverflowManagerErrorDomain
+                                              code:StackOverflowManagerErrorQuestionSearchCode
+                                          userInfo:@{NSUnderlyingErrorKey: error}];
+    }
+    else {
+        reportableError = [NSError errorWithDomain:StackOverflowManagerErrorDomain
+                                              code:StackOverflowManagerErrorBodySearchCode
+                                          userInfo:nil];
+    }
+    
+    [self.delegate fetchingBodyFailedWithError:reportableError];
+}
 
+
+- (void)receivedQuestionBodyJSON:(NSString*)objectNotation
+{
+    [self.questionBuilder fillInDetailsForQuestion:self.questionNeedingBody fromJSON:objectNotation];
 }
 
 @end

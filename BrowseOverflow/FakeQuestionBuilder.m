@@ -22,4 +22,10 @@
     return self.arrayToReturn;
 }
 
+- (void)fillInDetailsForQuestion:(Question *)question fromJSON:(NSString *)jsonString
+{
+    self.JSON = jsonString;
+    self.questionToFill = question;
+}
+
 @end

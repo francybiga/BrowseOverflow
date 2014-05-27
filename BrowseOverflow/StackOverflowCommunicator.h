@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class Question;
+
 @interface StackOverflowCommunicator : NSObject
 
 - (void)searchForQuestionsWithTag:(NSString*)tag;
-- (BOOL)wasAskedToFetchBody;
+- (void)searchBodyForQuestion:(Question*)question;
 
 @end

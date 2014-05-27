@@ -17,7 +17,8 @@
 extern NSString *StackOverflowManagerErrorDomain;
 
 enum{
-    StackOverflowManagerErrorQuestionSearchCode
+    StackOverflowManagerErrorQuestionSearchCode, 
+    StackOverflowManagerErrorBodySearchCode
 };
 
 @interface StackOverflowManager : NSObject
@@ -29,6 +30,7 @@ enum{
 - (void)fetchQuestionsOnTopic:(Topic*)topic;
 - (void)searchingForQuestionsFailedWithError:(NSError*)error;
 - (void)receivedQuestionsJSON:(NSString*)objectNotation;
+
 - (void)fetchBodyForQuestion:(Question*)question;
 - (void)fetchingQuestionBodyFailedWithError:(NSError *)error;
 - (void)receivedQuestionBodyJSON:(NSString*)json;
