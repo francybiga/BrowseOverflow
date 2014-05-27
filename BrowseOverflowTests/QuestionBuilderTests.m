@@ -24,7 +24,7 @@
 
 static NSString *kQuestionJSON = @"{"
 @"\"items\":"
-@"[\""
+@"["
 @"{"
 @"\"tags\": ["
 @"\"iphone\","
@@ -50,12 +50,12 @@ static NSString *kQuestionJSON = @"{"
 @"\"question_id\": 458304,"
 @"\"link\": \"http://stackoverflow.com/questions/458304/how-can-i-programmatically-determine-if-my-app-is-running-in-the-iphone-simulato\","
 @"\"title\": \"How can I programmatically determine if my app is running in the iphone simulator?\""
-@"},"
+@"}"
 @"],"
-@"\"has_more\": true,"
-@"\"quota_max\": 10000,"
-@"\"quota_remaining\": 9990"
-@"};";
+@"\"has_more\":true"
+@",\"quota_max\":10000"
+@",\"quota_remaining\":9990"
+@"}";
 
 static NSString *kNoQuestionJSONString = @"{[]}";
 
@@ -115,7 +115,7 @@ static NSString *kNoQuestionJSONString = @"{[]}";
 {
     NSError *error = nil;
     NSArray *questions = [questionBuilder questionsFromJSON:kQuestionJSON error:&error];
-    XCTAssertEqual([questions count], 1,@"The builder should have created one question");
+    XCTAssertEqual([questions count],1,@"The builder should have created one question");
 }
 
 - (void)testQuestionCreatedFromJSONHasPropertiesPresentedInJSON
