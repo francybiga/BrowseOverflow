@@ -49,7 +49,8 @@ static NSString *kQuestionJSON = @"{"
 @"\"last_edit_date\": 1232950754,"
 @"\"question_id\": 458304,"
 @"\"link\": \"http://stackoverflow.com/questions/458304/how-can-i-programmatically-determine-if-my-app-is-running-in-the-iphone-simulato\","
-@"\"title\": \"How can I programmatically determine if my app is running in the iphone simulator?\""
+@"\"title\": \"How can I programmatically determine if my app is running in the iphone simulator?\","
+@"\"body\":\"<p>As the question states, I would mainly like to know whether or not my code is running in the simulator, but would also be interested in knowing the specific iphone version that is running or being simulated.</p>\\n\\n<p>EDIT: I added the word 'programmatically' to the question name. The point of my question is to be able to dynamically include / exclude code depending on which version / simulator is running, so I'd really be looking for something like a pre-processor directive that can provide me this info.</p>\\n\""
 @"}"
 @"],"
 @"\"has_more\":true"
@@ -59,6 +60,7 @@ static NSString *kQuestionJSON = @"{"
 
 static NSString *kNoQuestionJSONString = @"{[]}";
 
+static NSString *kQuestionBodyString = @"<p>As the question states, I would mainly like to know whether or not my code is running in the simulator, but would also be interested in knowing the specific iphone version that is running or being simulated.</p>\n\n<p>EDIT: I added the word 'programmatically' to the question name. The point of my question is to be able to dynamically include / exclude code depending on which version / simulator is running, so I'd really be looking for something like a pre-processor directive that can provide me this info.</p>\n";
 
 - (void)setUp
 {
@@ -82,7 +84,7 @@ static NSString *kNoQuestionJSONString = @"{[]}";
 
 - (void)testNilReturnedWhenStringIsNotJSON
 {
-    XCTAssertNil([questionBuilder questionsFromJSON:@"Not JSON" error:NULL], @"This parameter should not be parsable");
+    XCTAssertNil([questionBuilder questionsFromJSON:@"Not JSON" error:NULL], @"This parameter should be parsable");
 }
 
 - (void)testErrorSetWhenStringIsNotJSON
@@ -94,7 +96,7 @@ static NSString *kNoQuestionJSONString = @"{[]}";
 
 - (void)testPassingNullErrorDoesNotCauseCrash
 {
-    XCTAssertNoThrow([questionBuilder questionsFromJSON:@"Not JSON" error:NULL], @"Using a NULL parameter should not be a problem");
+    XCTAssertNoThrow([questionBuilder questionsFromJSON:@"Not JSON" error:NULL], @"Using a NULL error parameter should not be a problem");
 }
 
 - (void)testRealJSONWithoutQuestionsArrayIsError
@@ -122,7 +124,7 @@ static NSString *kNoQuestionJSONString = @"{[]}";
 {
     XCTAssertEqual(question.questionID,458304, @"The question ID should match the data we sent");
     XCTAssertEqual([question.date timeIntervalSince1970], (NSTimeInterval)1232384132,@"The date of the question should match the data");
-    XCTAssertEqual(question.title,@"How can I programmatically determine if my app is running in the iphone simulator?", @"Title should match the provided data");
+    XCTAssertEqualObjects(question.title,@"How can I programmatically determine if my app is running in the iphone simulator?", @"Title should match the provided data");
     XCTAssertEqual(question.score,110,@"Score should match the data");
     Person *asker = question.asker;
     XCTAssertEqualObjects(asker.name, @"Jeffrey Meyer",@"Asker name must match the data");
@@ -136,7 +138,7 @@ static NSString *kNoQuestionJSONString = @"{[]}";
     XCTAssertEqual([questions count], 1,@"question builder must handle partial input");
 }
 
-- (void)testBuildingQUestionBodyWithNoDataCannotBeTried
+- (void)testBuildingQuestionBodyWithNoDataCannotBeTried
 {
     XCTAssertThrows([questionBuilder fillInDetailsForQuestion:question fromJSON:nil],@"not receiving data should have been handled earlier");
 }
@@ -161,10 +163,8 @@ static NSString *kNoQuestionJSONString = @"{[]}";
 - (void)testBodyContainedInJSONIsAddedToQuestion
 {
     [questionBuilder fillInDetailsForQuestion: question fromJSON: kQuestionJSON];
-    //FIXME replace the string in the assert with the actual question body
-    XCTAssertEqualObjects(question.body, @"<p>I've been trying to use persistent keychain references.<\p>",@"The correct question body is added");
+
+    XCTAssertEqualObjects(question.body, kQuestionBodyString,@"The correct question body is added");
 }
-
-
 
 @end

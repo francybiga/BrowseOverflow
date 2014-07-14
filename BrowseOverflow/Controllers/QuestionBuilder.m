@@ -8,8 +8,18 @@
 
 #import "QuestionBuilder.h"
 #import "Question.h"
+#import "Answer.h"
+#import "PersonBuilder.h"
 
-NSString *QuestionBuilderErrorDomain= @"StackOverflowQuestionBuilderError";
+NSString *QuestionBuilderErrorDomain= @"BrowseOverflowQuestionBuilderError";
+
+static NSString *kQuestionsListJSONKey = @"items";
+static NSString *kQuestionIDJSONKey = @"question_id";
+static NSString *kQuestionCreationDateJSONKey = @"creation_date";
+static NSString *kQuestionTitleJSONKey = @"title";
+static NSString *kQuestionScoreJSONKey = @"score";
+static NSString *kQuestionBodyJSONKey = @"body";
+static NSString *kQuestionAskerJSONKey = @"owner";
 
 @implementation QuestionBuilder
 
@@ -27,15 +37,19 @@ NSString *QuestionBuilderErrorDomain= @"StackOverflowQuestionBuilderError";
     
     if (parsedObject == nil){
         if (error != NULL){
+            NSDictionary *userInfo = nil;
+            if (localError) {
+                userInfo = @{NSUnderlyingErrorKey: localError};
+            }
             *error = [NSError errorWithDomain: QuestionBuilderErrorDomain
                                          code:QuestionBuilderInvalidJSONError
-                                     userInfo:nil];
+                                     userInfo:userInfo];
         }
         return nil;
     }
     
-    NSArray *questions = [parsedObject objectForKey:@"items"];
-    if (questions == nil){
+    NSArray *questionsJSONArray = [parsedObject objectForKey:kQuestionsListJSONKey];
+    if (!questionsJSONArray){
         if (error != NULL){
             *error = [NSError errorWithDomain:QuestionBuilderErrorDomain
                                          code:QuestionBuilderMissingDataError
@@ -43,12 +57,47 @@ NSString *QuestionBuilderErrorDomain= @"StackOverflowQuestionBuilderError";
         }
         return nil;
     }
-    return nil;
+    
+    NSMutableArray *questions = [[NSMutableArray alloc] init];
+    for (NSDictionary *questionJSON in questionsJSONArray) {
+        Question *question = [self questionFromJSON:questionJSON];
+        [questions addObject:question];
+    }
+    
+    return questions;
 }
 
 - (void)fillInDetailsForQuestion:(Question*)question fromJSON:(NSString*)jsonString
 {
+    NSParameterAssert(question);
+    NSParameterAssert(jsonString);
+    
+    NSData *unicodeNotation = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:unicodeNotation
+                                                                 options:0
+                                                                   error:NULL];
+    if (![parsedObject isKindOfClass:[NSDictionary class]]) {
+        return;
+    }
+    NSString *questionBody = [[parsedObject[kQuestionsListJSONKey] lastObject] objectForKey:kQuestionBodyJSONKey];
+    if (questionBody) {
+        question.body = questionBody;
+    }
+}
 
+- (Question *)questionFromJSON:(NSDictionary *)questionJSON
+{
+    Question *question = [[Question alloc] init];
+    question.questionID = [questionJSON[kQuestionIDJSONKey] integerValue];
+    question.date = [NSDate dateWithTimeIntervalSince1970:[questionJSON[kQuestionCreationDateJSONKey] integerValue]];
+    question.title = questionJSON[kQuestionTitleJSONKey];
+    question.score = [questionJSON[kQuestionScoreJSONKey] integerValue];
+    
+    PersonBuilder *personBuilder = [[PersonBuilder alloc] init];
+    question.asker = [personBuilder personFromDictionary:questionJSON[kQuestionAskerJSONKey]];
+    
+    return question;
 }
 
 @end
