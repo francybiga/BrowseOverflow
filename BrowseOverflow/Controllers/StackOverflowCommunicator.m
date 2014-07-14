@@ -16,4 +16,14 @@
 
 @implementation StackOverflowCommunicator
 
+- (void)fetchContentAtURL:(NSURL *)url
+{
+    _fetchingURL = url;
+}
+
+- (void)searchForQuestionsWithTag:(NSString *)tag
+{
+    [self fetchContentAtURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://api.stackexchange.com/2.2/search?order=desc&sort=activity&tagged=%@&site=stackoverflow",tag]]];    
+}
+
 @end

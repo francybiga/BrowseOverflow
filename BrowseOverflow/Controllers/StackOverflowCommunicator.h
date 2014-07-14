@@ -10,9 +10,13 @@
 
 @class Question;
 
-@interface StackOverflowCommunicator : NSObject
+@interface StackOverflowCommunicator : NSObject {
+    @protected NSURL *_fetchingURL;
+}
 
 - (void)searchForQuestionsWithTag:(NSString*)tag;
-- (void)searchBodyForQuestion:(Question*)question;
+- (void)downloadInformationForQuestionWithID: (NSInteger)identifier;
+- (void)downloadAnswersToQuestionWithID: (NSInteger)identifier;
+- (void)fetchBodyForQuestion:(NSInteger)questionID;
 
 @end

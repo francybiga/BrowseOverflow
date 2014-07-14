@@ -76,7 +76,7 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
 - (void)fetchBodyForQuestion:(Question*)question
 {
     self.questionNeedingBody = question;
-    [self.communicator  searchBodyForQuestion:question];
+    [self.communicator  fetchBodyForQuestion:question.questionID];
 }
 - (void)fetchingQuestionBodyFailedWithError:(NSError *)error
 {

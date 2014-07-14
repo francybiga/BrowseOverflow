@@ -31,7 +31,7 @@
     return _wasAskedToFetchBody;
 }
 
-- (void)searchBodyForQuestion:(Question*)question
+- (void)fetchBodyForQuestion:(NSInteger)questionID
 {
     self.wasAskedToFetchBody = YES;
 }
