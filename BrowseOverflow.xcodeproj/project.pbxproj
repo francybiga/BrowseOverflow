@@ -23,6 +23,7 @@
 		25ADEC121920D948008FC329 /* StackOverflowCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 25ADEC101920D948008FC329 /* StackOverflowCommunicator.m */; };
 		25ADEC161920D977008FC329 /* MockStackOverflowCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 25ADEC151920D977008FC329 /* MockStackOverflowCommunicator.m */; };
 		25AEC9FC192E1FD60076E1B7 /* TopicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25AEC9FB192E1FD60076E1B7 /* TopicTests.m */; };
+		25AF527D19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 25AF527C19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.m */; };
 		25CF7FAC1906C49D00012DE1 /* QuestionCreationWorkflowTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CF7FAB1906C49D00012DE1 /* QuestionCreationWorkflowTests.m */; };
 		25CF7FAF1906C63600012DE1 /* StackOverflowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CF7FAE1906C63600012DE1 /* StackOverflowManager.m */; };
 		25CF7FB01906C63600012DE1 /* StackOverflowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25CF7FAE1906C63600012DE1 /* StackOverflowManager.m */; };
@@ -83,6 +84,9 @@
 		25ADEC141920D977008FC329 /* MockStackOverflowCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockStackOverflowCommunicator.h; sourceTree = "<group>"; };
 		25ADEC151920D977008FC329 /* MockStackOverflowCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockStackOverflowCommunicator.m; sourceTree = "<group>"; };
 		25AEC9FB192E1FD60076E1B7 /* TopicTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicTests.m; sourceTree = "<group>"; };
+		25AF527B19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonNetworkedStackOverflowCommunicator.h; sourceTree = "<group>"; };
+		25AF527C19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonNetworkedStackOverflowCommunicator.m; sourceTree = "<group>"; };
+		25AF527E19A39DE3003E2EBC /* StackOverflowCommunicatorDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StackOverflowCommunicatorDelegate.h; sourceTree = "<group>"; };
 		25CF7FAB1906C49D00012DE1 /* QuestionCreationWorkflowTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionCreationWorkflowTests.m; sourceTree = "<group>"; };
 		25CF7FAD1906C63600012DE1 /* StackOverflowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackOverflowManager.h; sourceTree = "<group>"; };
 		25CF7FAE1906C63600012DE1 /* StackOverflowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackOverflowManager.m; sourceTree = "<group>"; };
@@ -148,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				25CF7FB21906C6EF00012DE1 /* StackOverflowManagerDelegate.h */,
+				25AF527E19A39DE3003E2EBC /* StackOverflowCommunicatorDelegate.h */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -189,6 +194,8 @@
 				25AD59CD19210BEE003DDC36 /* FakeQuestionBuilder.m */,
 				2558B5AC19742BBD0017C029 /* InspectableStackOverflowCommunicator.h */,
 				2558B5AD19742BBD0017C029 /* InspectableStackOverflowCommunicator.m */,
+				25AF527B19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.h */,
+				25AF527C19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.m */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -419,6 +426,7 @@
 				2558B5A11973D7A50017C029 /* AnswerBuilder.m in Sources */,
 				25CF7FAC1906C49D00012DE1 /* QuestionCreationWorkflowTests.m in Sources */,
 				25ADEC121920D948008FC329 /* StackOverflowCommunicator.m in Sources */,
+				25AF527D19A37BD8003E2EBC /* NonNetworkedStackOverflowCommunicator.m in Sources */,
 				B73A3AB923FDB9ED9DDDD67B /* AnswerTests.m in Sources */,
 				2558B5A01973D5290017C029 /* AnswerBuilderTests.m in Sources */,
 				25AD59CB19210B70003DDC36 /* QuestionBuilder.m in Sources */,

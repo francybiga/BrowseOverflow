@@ -94,7 +94,7 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
     }
     else {
         reportableError = [NSError errorWithDomain:StackOverflowManagerErrorDomain
-                                              code:StackOverflowManagerErrorBodySearchCode
+                                              code:StackOverflowManagerErrorBodyFetchCode
                                           userInfo:nil];
     }
     

@@ -15,4 +15,9 @@
     return _fetchingURL;
 }
 
+- (NSURLConnection *)currentURLConnection
+{
+    return _fetchingConnection;
+}
+
 @end
