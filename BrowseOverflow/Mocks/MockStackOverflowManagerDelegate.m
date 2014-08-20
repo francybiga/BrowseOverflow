@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong, readwrite) NSError *fetchError;
 @property (nonatomic, strong, readwrite) NSArray *receivedQuestions;
+@property (nonatomic, strong, readwrite) NSArray *receivedAnswers;
 
 @end
 
@@ -19,6 +20,12 @@
 
 
 #pragma mark - StackOverflowManagerDelegate
+
+- (void)fetchingBodyFailedWithError:(NSError*)error
+{
+    self.fetchError = error;
+}
+
 
 - (void)fetchingQuestionsFailedWithError:(NSError*)error
 {
@@ -30,9 +37,9 @@
     self.receivedQuestions = questions;
 }
 
-- (void)fetchingBodyFailedWithError:(NSError*)error
+- (void)didReceivedAnswers:(NSArray *)answers
 {
-    self.fetchError = error;
+    self.receivedAnswers = answers;
 }
 
 @end

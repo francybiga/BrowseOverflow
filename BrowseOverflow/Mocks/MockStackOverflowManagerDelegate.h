@@ -13,5 +13,6 @@
 
 @property (nonatomic, strong,readonly) NSError *fetchError;
 @property (nonatomic, strong,readonly) NSArray *receivedQuestions;
+@property (nonatomic, strong,readonly) NSArray *receivedAnswers;
 
 @end

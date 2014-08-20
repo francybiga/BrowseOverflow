@@ -17,6 +17,7 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
 @interface StackOverflowManager ()
 
 @property (nonatomic, strong) Question *questionNeedingBody;
+@property (nonatomic, strong) Question *questionToFill;
 
 @end
 
@@ -34,24 +35,6 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
 - (void)fetchQuestionsOnTopic:(Topic*)topic
 {
     [self.communicator searchForQuestionsWithTag:[topic tag]];
-}
-
-- (void)searchingForQuestionsFailedWithError:(NSError*)error
-{
-    [self tellDelegateAboutQuestionSearchError:error];
-}
-
-- (void)receivedQuestionsJSON:(NSString*)objectNotation
-{
-    NSError *error = nil;
-    NSArray *questions = [self.questionBuilder questionsFromJSON:objectNotation error:&error];
-    
-    if (!questions){
-        [self tellDelegateAboutQuestionSearchError:error];
-    }
-    else {
-        [self.delegate didReceivedQuestions:questions];
-    }
 }
 
 - (void)tellDelegateAboutQuestionSearchError:(NSError*)error
@@ -72,15 +55,10 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
     [self.delegate fetchingQuestionsFailedWithError:reportableError];
 }
 
-
 - (void)fetchBodyForQuestion:(Question*)question
 {
     self.questionNeedingBody = question;
     [self.communicator  fetchBodyForQuestion:question.questionID];
-}
-- (void)fetchingQuestionBodyFailedWithError:(NSError *)error
-{
-    [self tellDelegateAboutBodySearchError:error];
 }
 
 - (void)tellDelegateAboutBodySearchError:(NSError*)error
@@ -101,10 +79,77 @@ NSString *StackOverflowManagerErrorDomain = @"StackOverflowManagerErrorDomain";
     [self.delegate fetchingBodyFailedWithError:reportableError];
 }
 
+- (void)fetchAnswersForQuestion:(Question *)question
+{
+    self.questionToFill = question;
+    [self.communicator downloadAnswersToQuestionWithID:question.questionID];
+}
+
+
+- (void)tellDelegateAboutAnswersSearchError:(NSError*)error
+{
+    NSError *reportableError;
+    
+    if (error){
+        reportableError = [NSError errorWithDomain:StackOverflowManagerErrorDomain
+                                              code:StackOverflowManagerErrorAnswersFetchCode
+                                          userInfo:@{NSUnderlyingErrorKey: error}];
+    }
+    else {
+        reportableError = [NSError errorWithDomain:StackOverflowManagerErrorDomain
+                                              code:StackOverflowManagerErrorAnswersFetchCode
+                                          userInfo:nil];
+    }
+    
+    [self.delegate fetchingQuestionsFailedWithError:reportableError];
+}
+
+#pragma mark - StackOverflowCommunicatorDelegate
+
+- (void)searchingForQuestionsFailedWithError:(NSError*)error
+{
+    [self tellDelegateAboutQuestionSearchError:error];
+}
+
+- (void)fetchingQuestionBodyFailedWithError:(NSError *)error
+{
+    [self tellDelegateAboutBodySearchError:error];
+}
+
+- (void)fetchingAnswersFailedWithError:(NSError *)error
+{
+    [self tellDelegateAboutAnswersSearchError:error];
+}
+
+- (void)receivedQuestionsJSON:(NSString*)objectNotation
+{
+    NSError *error = nil;
+    NSArray *questions = [self.questionBuilder questionsFromJSON:objectNotation error:&error];
+    
+    if (!questions){
+        [self tellDelegateAboutQuestionSearchError:error];
+    }
+    else {
+        [self.delegate didReceivedQuestions:questions];
+    }
+}
 
 - (void)receivedQuestionBodyJSON:(NSString*)objectNotation
 {
     [self.questionBuilder fillInDetailsForQuestion:self.questionNeedingBody fromJSON:objectNotation];
 }
+
+- (void)receivedAnswerListJSON:(NSString *)objectNotation
+{
+    NSError *error = nil;
+    NSArray *answers = [self.answerBuilder answersFromJSON:objectNotation error:&error];
+    
+    if (!answers) {
+        [self tellDelegateAboutAnswersSearchError:error];
+    } else {
+        [self.delegate didReceivedAnswers:answers];
+    }    
+}
+
 
 @end

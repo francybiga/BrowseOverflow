@@ -10,6 +10,8 @@
 
 #import "InspectableStackOverflowCommunicator.h"
 #import "NonNetworkedStackOverflowCommunicator.h"
+#import "MockStackOverflowManager.h"
+#import "FakeURLResponse.h"
 
 @interface StackOverflowCommunicatorTests : XCTestCase
 
@@ -34,6 +36,7 @@ static NSString *kResponseString = @"Result";
     self.communicator = [[InspectableStackOverflowCommunicator alloc] init];
     self.nnCommunicator = [[NonNetworkedStackOverflowCommunicator alloc] init];
     self.manager = [[MockStackOverflowManager alloc] init];
+    self.nnCommunicator.delegate = self.manager;
     self.fourOhFourResponse = [[FakeURLResponse alloc] initWithStatusCode:404];
     self.receivedData = [kResponseString dataUsingEncoding:NSUTF8StringEncoding];
 }
@@ -84,7 +87,7 @@ static NSString *kResponseString = @"Result";
 
 - (void)testReceivingResponseDiscardsExistingData
 {
-    self.nnCommunicator.receivedData = [@"Hello" dataUsingEncoding:NSUTF8StringEncoding];
+    self.nnCommunicator.receivedData = [[@"Hello" dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
     [self.nnCommunicator searchForQuestionsWithTag:@"ios"];
     [self.nnCommunicator connection:nil didReceiveResponse:nil];
     XCTAssertEqual([self.nnCommunicator.receivedData length], 0, @"Data should have been discarded");
@@ -94,7 +97,7 @@ static NSString *kResponseString = @"Result";
 {
     [self.nnCommunicator searchForQuestionsWithTag:@"ios"];
     [self.nnCommunicator connection:nil didReceiveResponse:self.fourOhFourResponse];
-    XCTAssertEqual([self.manager topicFailureErrorCode], 404, @"Fetch failure was passed through to delegate");
+    XCTAssertEqual(self.manager.topicFailureErrorCode, 404, @"Fetch failure was passed through to delegate");
 }
 
 - (void)noErrorReceivedOn200Status
@@ -113,22 +116,37 @@ static NSString *kResponseString = @"Result";
     XCTAssertEqual([self.manager topicFailureErrorCode], 12345, @"Failure to connect should get passed to the delegate");
 }
 
-- (void)testSuccessfulQuestion
+- (void)testSuccessfulQuestionSearchPassesDataToDelegate
 {
     [self.nnCommunicator searchForQuestionsWithTag:@"ios"];
-    [self.nnCommunicator didReceivedData: self.receivedData];
+    [self.nnCommunicator setReceivedData:[self.receivedData mutableCopy]];
     [self.nnCommunicator connectionDidFinishLoading:nil];
     XCTAssertEqualObjects([self.manager topicSearchString], kResponseString, @"The delegate should have received data on success");
 }
 
+- (void)testSuccessfulBodyFetchPassesDataToDelegate {
+    [self.nnCommunicator downloadInformationForQuestionWithID: 12345];
+    [self.nnCommunicator setReceivedData: [self.receivedData mutableCopy]];
+    [self.nnCommunicator connectionDidFinishLoading: nil];
+    XCTAssertEqualObjects([self.manager questionBodyString], @"Result", @"The delegate should have received the question body data");
+}
+
+- (void)testSuccessfulAnswerFetchPassesDataToDelegate {
+    [self.nnCommunicator downloadAnswersToQuestionWithID: 12345];
+    [self.nnCommunicator setReceivedData: [self.receivedData mutableCopy]];
+    [self.nnCommunicator connectionDidFinishLoading: nil];
+    XCTAssertEqualObjects([self.manager answerListString], @"Result", @"Answer list should be passed to delegate");
+}
+
 - (void)testAdditionalDataAppendedToDownload
 {
-    [self.nnCommunicator setReceivedData:_receivedData];
+    [self.nnCommunicator setReceivedData:[self.receivedData mutableCopy]];
     NSString *stringToAppend = @"appended";
     NSData *extraData = [stringToAppend dataUsingEncoding:NSUTF8StringEncoding];
     [self.nnCommunicator connection:nil didReceiveData:extraData];
     NSString *combinedString = [kResponseString stringByAppendingString:stringToAppend];
-    NSString *communicatorCombinedString = [[self.nnCommunicator receivedData] encodeWithCoder:NSUTF8StringEncoding];
+    NSString *communicatorCombinedString = [[NSString alloc] initWithData:self.nnCommunicator.receivedData
+                                                                 encoding:NSUTF8StringEncoding];
     XCTAssertEqualObjects(communicatorCombinedString, combinedString, @"Received data should be appended to the downloaded data");
 }
 

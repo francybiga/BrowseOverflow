@@ -14,7 +14,7 @@
 - (void)fetchingQuestionBodyFailedWithError:(NSError *)error;
 - (void)fetchingAnswersFailedWithError:(NSError *)error;
 
-- (void)receivedQuestionBodyJSON:(NSString*)json;
+- (void)receivedQuestionBodyJSON:(NSString*)objectNotation;
 - (void)receivedQuestionsJSON:(NSString*)objectNotation;
 - (void)receivedAnswerListJSON:(NSString *)objectNotation;
 

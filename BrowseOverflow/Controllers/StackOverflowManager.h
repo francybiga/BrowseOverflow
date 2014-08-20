@@ -11,6 +11,7 @@
 #import "StackOverflowManagerDelegate.h"
 #import "StackOverflowCommunicatorDelegate.h"
 #import "QuestionBuilder.h"
+#import "AnswerBuilder.h"
 
 @class StackOverflowCommunicator;
 @class Topic;
@@ -19,7 +20,8 @@ extern NSString *StackOverflowManagerErrorDomain;
 
 enum{
     StackOverflowManagerErrorQuestionSearchCode, 
-    StackOverflowManagerErrorBodyFetchCode
+    StackOverflowManagerErrorBodyFetchCode,
+    StackOverflowManagerErrorAnswersFetchCode
 };
 
 @interface StackOverflowManager : NSObject <StackOverflowCommunicatorDelegate>
@@ -27,6 +29,7 @@ enum{
 @property (nonatomic, weak) id<StackOverflowManagerDelegate> delegate;
 @property (nonatomic, strong) StackOverflowCommunicator *communicator;
 @property (nonatomic, strong) QuestionBuilder *questionBuilder;
+@property (nonatomic, strong) AnswerBuilder *answerBuilder;
 
 - (void)fetchQuestionsOnTopic:(Topic*)topic;
 - (void)fetchBodyForQuestion:(Question*)question;

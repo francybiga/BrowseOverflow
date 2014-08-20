@@ -10,6 +10,9 @@
 
 #import "StackOverflowCommunicatorDelegate.h"
 
+@class Topic;
+@class Question;
+
 @interface MockStackOverflowManager : NSObject <StackOverflowCommunicatorDelegate>
 
 @property (nonatomic, assign) NSInteger topicFailureErrorCode;
@@ -23,5 +26,9 @@
 @property (nonatomic, assign) BOOL wasAskedToFetchQuestions;
 @property (nonatomic, assign) BOOL wasAskedToFetchAnswers;
 @property (nonatomic, assign) BOOL wasAskedToFetchBody;
+
+- (void)fetchQuestionsOnTopic:(Topic *)topic;
+- (void)fetchAnswersForQuestion:(Question *)question;
+- (void)fetchBodyForQuestion:(Question *)question;
 
 @end

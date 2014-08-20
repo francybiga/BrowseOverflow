@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FakeURLResponse : NSObject
+@interface FakeURLResponse : NSURLResponse
 
 @property (nonatomic, assign) NSInteger statusCode;
 

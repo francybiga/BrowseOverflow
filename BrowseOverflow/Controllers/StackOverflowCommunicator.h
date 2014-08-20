@@ -14,18 +14,17 @@
 
 extern NSString *StackOverflowCommunicatorErrorDomain;
 
-@interface StackOverflowCommunicator : NSObject {
+@interface StackOverflowCommunicator : NSObject <NSURLConnectionDataDelegate> {
 @protected
     NSURL *_fetchingURL;
     NSURLConnection *_fetchingConnection;
-    NSMutableData *_receivedData;
 @private
-    id <StackOverflowCommunicatorDelegate> delegate;
     void (^errorHandler)(NSError *);
     void (^successHandler)(NSString *);
 }
 
 @property (nonatomic, assign) id<StackOverflowCommunicatorDelegate> delegate;
+@property (nonatomic, strong) NSMutableData *receivedData;
 
 - (void)searchForQuestionsWithTag:(NSString*)tag;
 - (void)downloadInformationForQuestionWithID: (NSInteger)identifier;

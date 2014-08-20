@@ -10,6 +10,4 @@
 
 @interface NonNetworkedStackOverflowCommunicator : StackOverflowCommunicator
 
-@property (nonatomic, copy) NSData *receivedData;
-
 @end

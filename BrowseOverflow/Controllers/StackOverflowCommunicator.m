@@ -77,9 +77,16 @@ NSString *StackOverflowCommunicatorErrorDomain = @"StackOverflowCommunicatorErro
     _fetchingConnection = nil;
 }
 
+- (void)fetchBodyForQuestion:(NSInteger)questionID
+{
+    
+}
+
+#pragma mark - NSURLConnectionDataDelegate
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    _receivedData = nil;
+    self.receivedData = nil;
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     if ([httpResponse statusCode] != 200) {
         NSError *error = [NSError errorWithDomain:StackOverflowCommunicatorErrorDomain
@@ -88,19 +95,19 @@ NSString *StackOverflowCommunicatorErrorDomain = @"StackOverflowCommunicatorErro
         errorHandler(error);
         [self cancelAndDiscardURLConnection];
     } else {
-        _receivedData = [[NSMutableData alloc] init];
+        self.receivedData = [[NSMutableData alloc] init];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    [_receivedData appendData:data];
+    [self.receivedData appendData:data];
 }
 
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    _receivedData = nil;
+    self.receivedData = nil;
     _fetchingConnection = nil;
     _fetchingURL = nil;
     errorHandler(error);
@@ -110,9 +117,9 @@ NSString *StackOverflowCommunicatorErrorDomain = @"StackOverflowCommunicatorErro
 {
     _fetchingConnection = nil;
     _fetchingURL = nil;
-    NSString *receivedText = [[NSString alloc] initWithData:_receivedData
+    NSString *receivedText = [[NSString alloc] initWithData:self.receivedData
                                                    encoding:NSUTF8StringEncoding];
-    _receivedData = nil;
+    self.receivedData = nil;
     successHandler(receivedText);
 }
 
